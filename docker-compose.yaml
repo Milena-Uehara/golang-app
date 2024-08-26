@@ -22,7 +22,7 @@ services:
     image: postgres:13
     container_name: postgresql-db-container
     ports:
-      - "5434:5432"
+      - "5432:5432"
     volumes:
       - ./docker/create-table.sql:/docker-entrypoint-initdb.d/create-table.sql
     environment:

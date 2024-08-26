@@ -14,7 +14,7 @@ func init() {
 func main() {
 	routes.LoadRoutes()
 
-	port := ":8000"
+	port := ":8080"
 
 	zap.S().Infof("Server started on port %s", port)
 	if err := http.ListenAndServe(port, nil); err != nil {
