@@ -1,16 +1,16 @@
 package models
 
 import (
-	"github.com/Milena-Uehara/db"
+	"github.com/Milena-Uehara/golang-app/db"
 	"go.uber.org/zap"
 )
 
 type Produto struct {
-	Id         int
-	Nome       string
-	Descricao  string
-	Preco      float64
-	Quantidade int
+	Id          int
+	Name        string
+	Description string
+	Price       float64
+	Quantity    int
 }
 
 func init() {
@@ -20,7 +20,7 @@ func init() {
 func SearchProducts() []Produto {
 	db := db.ConnectDb()
 
-	selectDeProdutos, err := db.Query("select * from produtos order by id asc")
+	selectDeProdutos, err := db.Query("select * from products order by id asc")
 	if err != nil {
 		zap.L().Error(err.Error())
 	}
@@ -29,20 +29,20 @@ func SearchProducts() []Produto {
 	produtos := []Produto{}
 
 	for selectDeProdutos.Next() {
-		var id, quantidade int
-		var nome, descricao string
-		var preco float64
+		var id, quantity int
+		var name, description string
+		var price float64
 
-		err = selectDeProdutos.Scan(&id, &nome, &descricao, &preco, &quantidade)
+		err = selectDeProdutos.Scan(&id, &name, &description, &price, &quantity)
 		if err != nil {
 			zap.L().Error(err.Error())
 		}
 
 		p.Id = id
-		p.Nome = nome
-		p.Descricao = descricao
-		p.Preco = preco
-		p.Quantidade = quantidade
+		p.Name = name
+		p.Description = description
+		p.Price = price
+		p.Quantity = quantity
 
 		produtos = append(produtos, p)
 	}
@@ -51,16 +51,16 @@ func SearchProducts() []Produto {
 	return produtos
 }
 
-func CriarNovoProduto(nome, descricao string, preco float64, quantidade int) {
+func CriarNovoProduto(name, description string, price float64, quantity int) {
 	db := db.ConnectDb()
 
-	insertData, err := db.Prepare("insert into produtos(nome, descricao, preco, quantidade) values($1, $2, $3, $4)")
+	insertData, err := db.Prepare("insert into products(name, description, price, quantity) values($1, $2, $3, $4)")
 	if err != nil {
 		zap.L().Error(err.Error())
 	}
 
-	insertData.Exec(nome, descricao, preco, quantidade)
-	zap.L().Info("Dados inseridos com sucesso")
+	insertData.Exec(name, description, price, quantity)
+	zap.L().Info("New data inserted into the database.")
 
 	defer db.Close()
 }
@@ -68,13 +68,13 @@ func CriarNovoProduto(nome, descricao string, preco float64, quantidade int) {
 func DeletaProduto(id string) {
 	db := db.ConnectDb()
 
-	deletarProduto, err := db.Prepare("delete from produtos where id=$1")
+	deletarProduto, err := db.Prepare("delete from products where id=$1")
 	if err != nil {
 		zap.L().Error(err.Error())
 	}
 
 	deletarProduto.Exec(id)
-	zap.L().Info("Dados deletados com sucesso")
+	zap.L().Info("Data deleted from the database.")
 
 	defer db.Close()
 }
@@ -82,7 +82,7 @@ func DeletaProduto(id string) {
 func EditProduto(id string) Produto {
 	db := db.ConnectDb()
 
-	produtoDoBanco, err := db.Query("select * from produtos where id=$1", id)
+	produtoDoBanco, err := db.Query("select * from products where id=$1", id)
 	if err != nil {
 		zap.L().Error(err.Error())
 	}
@@ -90,33 +90,33 @@ func EditProduto(id string) Produto {
 	produtoParaAtualizar := Produto{}
 
 	for produtoDoBanco.Next() {
-		var id, quantidade int
-		var nome, descricao string
-		var preco float64
+		var id, quantity int
+		var name, description string
+		var price float64
 
-		err = produtoDoBanco.Scan(&id, &nome, &descricao, &preco, &quantidade)
+		err = produtoDoBanco.Scan(&id, &name, &description, &price, &quantity)
 		if err != nil {
 			zap.L().Error(err.Error())
 		}
 
 		produtoParaAtualizar.Id = id
-		produtoParaAtualizar.Nome = nome
-		produtoParaAtualizar.Descricao = descricao
-		produtoParaAtualizar.Preco = preco
-		produtoParaAtualizar.Quantidade = quantidade
+		produtoParaAtualizar.Name = name
+		produtoParaAtualizar.Description = description
+		produtoParaAtualizar.Price = price
+		produtoParaAtualizar.Quantity = quantity
 	}
 	defer db.Close()
 	return produtoParaAtualizar
 }
 
-func AtualizaProduto(id int, nome, descricao string, preco float64, quantidade int) {
+func AtualizaProduto(id int, name, description string, price float64, quantity int) {
 	db := db.ConnectDb()
 
-	AtualizaProduto, err := db.Prepare("update produtos set nome=$1, descricao=$2, preco=$3, quantidade=$4 where id=$5")
+	AtualizaProduto, err := db.Prepare("update products set name=$1, description=$2, price=$3, quantity=$4 where id=$5")
 	if err != nil {
 		zap.L().Error(err.Error())
 	}
-	AtualizaProduto.Exec(nome, descricao, preco, quantidade, id)
-	zap.L().Info("Dados atualizados com sucesso")
+	AtualizaProduto.Exec(name, description, price, quantity, id)
+	zap.L().Info("Data updated in the database.")
 	defer db.Close()
 }

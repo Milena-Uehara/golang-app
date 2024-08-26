@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  app:
+    #image: docker-go-app:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: golang-app-container
+    ports:
+      - 8080:8000
+    environment:
+      DB_USER: "postgres"
+      DB_NAME: "products_db"
+      DB_HOST: "postgres-db"
+      DB_PASSWORD: "postgres"
+    networks:
+      - golang-app
+    depends_on:
+      - postgres-db
+  postgres-db:
+    image: postgres:13
+    container_name: postgresql-db-container
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./docker/create-table.sql:/docker-entrypoint-initdb.d/create-table.sql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "postgres"
+    networks:
+      - golang-app
+
+networks:
+  golang-app: {}

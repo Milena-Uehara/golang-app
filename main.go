@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/Milena-Uehara/routes"
+	"github.com/Milena-Uehara/golang-app/routes"
 	"go.uber.org/zap"
 )
 

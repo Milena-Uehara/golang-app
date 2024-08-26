@@ -3,7 +3,7 @@ package routes
 import (
 	"net/http"
 
-	"github.com/Milena-Uehara/controllers"
+	"github.com/Milena-Uehara/golang-app/controllers"
 )
 
 func LoadRoutes() {

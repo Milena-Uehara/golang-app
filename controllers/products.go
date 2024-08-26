@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Milena-Uehara/models"
+	"github.com/Milena-Uehara/golang-app/models"
 	"go.uber.org/zap"
 )
 
@@ -26,23 +26,23 @@ func New(w http.ResponseWriter, r *http.Request) {
 
 func Insert(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
-		nome := r.FormValue("nome")
-		descricao := r.FormValue("descricao")
-		preco := r.FormValue("preco")
-		quantidade := r.FormValue("quantidade")
+		name := r.FormValue("name")
+		description := r.FormValue("description")
+		price := r.FormValue("price")
+		quantity := r.FormValue("quantity")
 
-		precoConvertido, err := strconv.ParseFloat(preco, 64)
+		priceConvertido, err := strconv.ParseFloat(price, 64)
 		if err != nil {
-			zap.S().Error("Erro na conversão do preço:", err)
+			zap.S().Error("Error converting price to float:", err)
 		}
 
-		quantidadeConvertido, err := strconv.Atoi(quantidade)
+		quantityConvertido, err := strconv.Atoi(quantity)
 		if err != nil {
-			zap.S().Error("Erro na conversão da quantidade:", err)
+			zap.S().Error("Error converting quantity to int:", err)
 		}
 
-		models.CriarNovoProduto(nome, descricao, precoConvertido, quantidadeConvertido)
-		zap.L().Info("Produto cadastrado com sucesso",
+		models.CriarNovoProduto(name, description, priceConvertido, quantityConvertido)
+		zap.L().Info("New product added successfully",
 			zap.String("Method", "POST"),
 			zap.String("Path", r.URL.Path),
 		)
@@ -54,7 +54,7 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 	idProduto := r.URL.Query().Get("id")
 	models.DeletaProduto(idProduto)
 	http.Redirect(w, r, "/", http.StatusMovedPermanently)
-	zap.L().Info("Produto deletado com sucesso",
+	zap.L().Info("Product deleted",
 		zap.String("Method", "POST"),
 		zap.String("Path", r.URL.Path),
 	)
@@ -69,28 +69,28 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 func Update(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		id := r.FormValue("id")
-		nome := r.FormValue("nome")
-		descricao := r.FormValue("descricao")
-		preco := r.FormValue("preco")
-		quantidade := r.FormValue("quantidade")
+		name := r.FormValue("name")
+		description := r.FormValue("description")
+		price := r.FormValue("price")
+		quantity := r.FormValue("quantity")
 
 		idConvertidaParaInt, err := strconv.Atoi(id)
 		if err != nil {
-			zap.S().Error("Erro na convesão do ID para int:", err)
+			zap.S().Error("Error converting id to int:", err)
 		}
 
-		precoConvertidoParaFloat, err := strconv.ParseFloat(preco, 64)
+		priceConvertidoParaFloat, err := strconv.ParseFloat(price, 64)
 		if err != nil {
-			zap.S().Error("Erro na convesão do preço para float64:", err)
+			zap.S().Error("Error converting price to float64:", err)
 		}
 
-		quantidadeConvertidaParaInt, err := strconv.Atoi(quantidade)
+		quantityConvertidaParaInt, err := strconv.Atoi(quantity)
 		if err != nil {
-			zap.S().Error("Erro na convesão da quantidade para int:", err)
+			zap.S().Error("Error converting quantity to int:", err)
 		}
 
-		models.AtualizaProduto(idConvertidaParaInt, nome, descricao, precoConvertidoParaFloat, quantidadeConvertidaParaInt)
-		zap.L().Info("Produto atualizado com sucesso",
+		models.AtualizaProduto(idConvertidaParaInt, name, description, priceConvertidoParaFloat, quantityConvertidaParaInt)
+		zap.L().Info("Product information updated successfully",
 			zap.String("Method", "POST"),
 			zap.String("Path", r.URL.Path),
 		)
