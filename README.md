@@ -4,5 +4,14 @@
 ```
 docker compose up
 ```
+or to run in daemon mode:
+```
+docker compose up -d
+```
 2. The web server will be running on http://localhost:8080.
 ![image](https://github.com/user-attachments/assets/da25db3d-2000-42c4-9dea-cb1e0a072506)
+
+3. To stop the web server, run:
+```
+docker compose down
+```
