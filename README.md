@@ -4,7 +4,7 @@
 ```
 docker compose up
 ```
-or to run in daemon mode:
+or to run in detached mode (run containers in background):
 ```
 docker compose up -d
 ```
