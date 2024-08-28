@@ -14,10 +14,16 @@ services:
       DB_NAME: "products_db"
       DB_HOST: "postgres-db"
       DB_PASSWORD: "postgres"
+      DD_SERVICE: go-store
+      DD_VERSION: 1.0
+      DD_ENV: local
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "go", "service": "go-store"}]'
     networks:
       - golang-app
     depends_on:
       - postgres-db
+
   postgres-db:
     image: postgres:13
     container_name: postgresql-db-container
@@ -30,6 +36,28 @@ services:
       POSTGRES_PASSWORD: "postgres"
     networks:
       - golang-app
+
+  datadog-agent:
+    image: gcr.io/datadoghq/agent:7.56.0
+    pid: host
+    environment:
+      - DD_API_KEY=<value>
+      - DD_REMOTE_CONFIGURATION_ENABLED=true
+      - DD_APM_ENABLED=false
+      - DD_APM_NON_LOCAL_TRAFFIC=true
+      - DD_LOGS_ENABLED=true
+      - DD_INVENTORIES_CONFIGURATION_ENABLED=true
+    ports:
+      - "8126:8126"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+
+secrets:
+  dd_api_key:
+    file: datadog-apikey.txt  
 
 networks:
   golang-app: {}
