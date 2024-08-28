@@ -23,4 +23,4 @@ jobs:
         with:
           context: docker/Dockerfile
           push: true
-          tags: uehara96/app-golang:$(date +%s)
+          tags: ${{secrets.DOCKERHUB_USERNAME}}/app-golang:latest
