@@ -23,4 +23,4 @@ jobs:
         with:
           context: docker/Dockerfile
           push: true
-          tags: go-store:$(date +%s)
+          tags: uehara96/app-golang:$(date +%s)
