@@ -21,6 +21,7 @@ jobs:
       - name: Build and push docker image to registry
         uses: docker/build-push-action@v5
         with:
-          context: docker/
+          context: .
+          file: docker/Dockerfile
           push: true
           tags: ${{secrets.DOCKERHUB_USERNAME}}/app-golang:latest
