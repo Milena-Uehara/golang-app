@@ -1,5 +1,9 @@
 # Web Server in Golang
+
 ![GitHub Actions](https://github.com/Milena-Uehara/golang-app/actions/workflows/build-and-push.yml/badge.svg)
+
+Code from [Alura Course](https://cursos.alura.com.br/course/go-lang-web).
+
 ## Running locally with docker compose
 1. In the root directory, run the following command:
 ```
