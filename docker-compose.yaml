@@ -40,6 +40,8 @@ services:
   datadog-agent:
     image: gcr.io/datadoghq/agent:7.56.0
     pid: host
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "datadog-agent", "service": "agent"}]'
     environment:
       - DD_API_KEY=<value>
       - DD_REMOTE_CONFIGURATION_ENABLED=true
