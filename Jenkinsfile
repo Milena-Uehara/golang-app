@@ -1,5 +1,5 @@
 pipeline {
-    agent any  // This runs the pipeline on any available agent (or specify a label for a particular node)
+    agent any
 
     environment {
         // Define the image name (you can modify it as per your requirements)
@@ -34,8 +34,7 @@ pipeline {
                 }
             }
         }
-
-    stages {
+        
         stage('Checkout') {
             steps {
                 // Checkout the source code from the repository
