@@ -1,17 +1,9 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:19.03.12'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket
-        }
-    }
-
+    agent any
     stages {
-        stage('Docker Build') {
+        stage('Check Docker Version') {
             steps {
-                script {
-                    sh 'docker build -t my-app .'
-                }
+                sh 'docker --version'
             }
         }
     }
