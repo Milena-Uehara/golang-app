@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        docker { image 'node:22.19.0-alpine3.22' }
-    }
+    agent any  // This runs the pipeline on any available agent (or specify a label for a particular node)
 
     environment {
         // Define the image name (you can modify it as per your requirements)
@@ -9,6 +7,33 @@ pipeline {
         REPO_NAME = 'uehara96'
         DOCKER_IMAGE = "${REPO_NAME}/${IMAGE_NAME}:latest"
     }
+
+    stages {
+        stage('Install Docker') {
+            steps {
+                script {
+                    // Check if Docker is installed
+                    def dockerInstalled = sh(script: 'which docker', returnStatus: true)
+
+                    // If Docker is not installed, install it
+                    if (dockerInstalled != 0) {
+                        echo 'Docker is not installed. Installing...'
+
+                        // Install Docker (for Ubuntu/Debian based systems)
+                        sh '''
+                        sudo apt-get update
+                        sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+                        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+                        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+                        sudo apt-get update
+                        sudo apt-get install -y docker-ce
+                        '''
+                    } else {
+                        echo 'Docker is already installed.'
+                    }
+                }
+            }
+        }
 
     stages {
         stage('Checkout') {
