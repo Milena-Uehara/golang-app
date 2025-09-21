@@ -16,17 +16,17 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                script {
-                    // Build the Docker image
-                    sh '''
-                    set -e
-                    docker build -t ${DOCKER_IMAGE} -f docker/Dockerfile .
-                    '''
-                }
-            }
-        }
+        // stage('Build') {
+        //     steps {
+        //         script {
+        //             // Build the Docker image
+        //             sh '''
+        //             set -e
+        //             docker build -t ${DOCKER_IMAGE} -f docker/Dockerfile .
+        //             '''
+        //         }
+        //     }
+        // }
 
         stage('Push Image') {
             steps {
