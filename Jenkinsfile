@@ -1,26 +1,18 @@
 pipeline {
     agent {
-        docker { image 'docker:dind' }  // Use a Docker container with Node.js
+        docker {
+            image 'docker:19.03.12'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket
+        }
     }
 
     stages {
-        stage('Checkout') {
+        stage('Docker Build') {
             steps {
-                checkout scm
+                script {
+                    sh 'docker build -t my-app .'
+                }
             }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                sh 'docker --version'  // Install Node.js dependencies inside the Docker container
-                sh 'git --version'
-            }
-        }
-    }
-
-    post {
-        always {
-            echo 'Cleaning up Docker container'
         }
     }
 }
