@@ -35,7 +35,7 @@ pipeline {
                     // Use withCredentials to access the stored Docker Hub credentials
                     withCredentials([usernamePassword(credentialsId: 'docker-login', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         // Log in to Docker Hub
-                        sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                        sh "docker login -u ${DOCKER_USERNAME} -p '${DOCKER_PASSWORD}'"
                         sh "docker push ${DOCKER_IMAGE}"
                     }
                 }
