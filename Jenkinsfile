@@ -1,83 +1,37 @@
 pipeline {
-    agent any
-
-    environment {
-        // Define the image name (you can modify it as per your requirements)
-        IMAGE_NAME = 'go-web-store'
-        REPO_NAME = 'uehara96'
-        DOCKER_IMAGE = "${REPO_NAME}/${IMAGE_NAME}:latest"
+    agent {
+        docker { image 'node:14' }  // Use a Docker container with Node.js
     }
 
     stages {
-        stage('Install Docker') {
-            steps {
-                script {
-                    // Check if Docker is installed
-                    def dockerInstalled = sh(script: 'which docker', returnStatus: true)
-
-                    // If Docker is not installed, install it
-                    if (dockerInstalled != 0) {
-                        echo 'Docker is not installed. Installing...'
-
-                        // Install Docker (for Ubuntu/Debian based systems)
-                        sh '''
-                        sudo apt-get update
-                        sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-                        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-                        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-                        sudo apt-get update
-                        sudo apt-get install -y docker-ce
-                        '''
-                    } else {
-                        echo 'Docker is already installed.'
-                    }
-                }
-            }
-        }
-        
         stage('Checkout') {
             steps {
-                // Checkout the source code from the repository
                 checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'  // Install Node.js dependencies inside the Docker container
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'npm test'  // Run tests inside the Docker container
             }
         }
 
         stage('Build') {
             steps {
-                script {
-                    // Build the Docker image
-                    sh '''
-                    set -e
-                    docker build -t ${DOCKER_IMAGE} -f docker/Dockerfile .
-                    '''
-                }
-            }
-        }
-
-        stage('Push Image') {
-            steps {
-                script {
-                    // Push the image to a Docker registry
-                    sh '''
-                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-                    docker push ${DOCKER_IMAGE}
-                    '''
-                }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                // Add your deployment steps here
-                echo 'Deploying the application...'
+                sh 'npm run build'  // Build the app inside the Docker container
             }
         }
     }
 
     post {
         always {
-            // Clean up Docker images after the pipeline finishes
-            sh 'docker system prune -f'
+            echo 'Cleaning up Docker container'
         }
     }
 }
