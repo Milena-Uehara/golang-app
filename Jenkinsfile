@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        docker { image 'node:22.19.0-alpine3.22' }
+    }
 
     environment {
         // Define the image name (you can modify it as per your requirements)
