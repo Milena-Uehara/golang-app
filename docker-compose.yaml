@@ -6,7 +6,7 @@ services:
     image: uehara96/go-web-store:latest
     container_name: golang-app-container
     ports:
-      - 8080:8000
+      - 8000:8000
     environment:
       DB_USER: "postgres"
       DB_NAME: "products_db"
