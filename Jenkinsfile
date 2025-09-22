@@ -68,7 +68,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying with Docker Compose..."
-                    sshagent(['ec2']) {
+                    sshagent(credentials: ['ec2']) {
                         // Upload files once to reduce redundant SCP commands
                         sh """
                         scp -o StrictHostKeyChecking=no docker-compose.yaml ubuntu@${EC2_IP}:/home/ubuntu
