@@ -6,7 +6,7 @@ pipeline {
         IMAGE_NAME = 'go-web-store'
         REPO_NAME = 'uehara96'
         DOCKER_IMAGE = "${REPO_NAME}/${IMAGE_NAME}:latest"
-        EC2_IP = '54.204.159.232'
+        EC2_IP = '3.92.135.71'
     }
 
     options {
