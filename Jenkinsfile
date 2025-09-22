@@ -24,7 +24,7 @@ pipeline {
 
     triggers {
         // Trigger the pipeline on commits to the `main` branch
-        //pollSCM('H/5 * * * *')
+        pollSCM('H/5 * * * *')
     }
 
     stages {        
